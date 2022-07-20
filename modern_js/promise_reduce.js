@@ -16,7 +16,7 @@ async function promiseReduce(asyncFunctions, reduce, initialValue) {
         result = reduce(result, await func());
     }
     
-    return Promise.resolve(result);
+    return result;
 }
 promiseReduce(
     [fn1, fn2],
