@@ -1,0 +1,8 @@
+{
+    "devDependencies": {
+        "vitest": "^0.19.1"
+    },
+    "dependencies": {
+        "jsdom": "^20.0.0"
+    }
+}
