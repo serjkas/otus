@@ -13,7 +13,7 @@ export const getPath = (el) => {
         return `${path} ${el.nodeName.toLowerCase()}:first-child`;
     }
     let nth = 1;
-    while (el.nodeType === Node.ELEMENT_NODE && (el = el.previousSibling)) {
+    while (el.nodeType === Node.ELEMENT_NODE) {
         nth++;
     }
 
