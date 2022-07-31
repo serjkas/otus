@@ -1,11 +1,11 @@
 export const getPath = (el) => {
-    if (el.id) {
-        return `#${el.id}`;
-    }
     if (el.tagName == "BODY") {
         return "body";
     }
     let path = getPath(el.parentNode);
+    if (el.id) {
+        return `${path} ${el.tagName.toLowerCase()}#${el.id}`;
+    }
     if (el.className) {
         return `${path} ${el.tagName.toLowerCase()}.${el.className}`;
     }
