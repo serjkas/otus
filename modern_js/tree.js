@@ -34,8 +34,9 @@ const getFiles = async (system_path) => {
     }
 };
 
-export const tree = async (system_path) => {
-    console.log("system_path:", system_path);
+export const tree = async () => {
+    // arg
+    const system_path = process.argv[2];
 
     await getFiles(system_path);
     all_dirs.unshift(system_path.match(path_pattern)[0]);
@@ -47,3 +48,4 @@ export const tree = async (system_path) => {
 };
 
 // console.log(await tree("/home/dev/proj/otus/modern_js/foo"));
+// console.log(await tree());

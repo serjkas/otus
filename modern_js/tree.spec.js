@@ -4,6 +4,12 @@ import { readdir } from "fs/promises";
 import { tree } from "./tree";
 
 test("getPath", async () => {
+    const PR_ENV = process.argv;
+    process.argv = [
+        "/usr/local/bin/node",
+        "/home/dev/proj/otus/modern_js/tree.js",
+        "/home/dev/proj/otus/modern_js/foo"
+    ];
     let out = {
         files: [
             "foo/f1.txt",
@@ -14,6 +20,6 @@ test("getPath", async () => {
         ],
         dirs: ["foo", "foo/bar", "bar/baz"]
     };
-    const data = await tree("/home/dev/proj/otus/modern_js/foo");
+    const data = await tree();
     expect(data).toEqual(out);
 });
