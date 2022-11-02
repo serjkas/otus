@@ -1,0 +1,23 @@
+type Book {
+  id: ID!
+  name: String!
+  author: Author!
+  price: String!
+  description: String
+  genre: Genre
+}
+
+type Author {
+  id: ID!
+  name: String!
+}
+
+type Genre {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  books: [Book]
+  findBook(id: Int): Book
+}
