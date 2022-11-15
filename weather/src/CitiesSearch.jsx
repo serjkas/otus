@@ -8,11 +8,13 @@ const CitiesSearch = () => {
 
     let navigate = useNavigate();
 
+   let a = cities.filter( item => item.id )
+
     const [city, setCity] = useState("");
 
     useEffect(() => {
         if (city !== "") {
-            return navigate(`/city/${city.label}`);
+            return navigate(`/city/${city?.label}`);
         }
     }, [city]);
 
