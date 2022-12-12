@@ -13,7 +13,7 @@
                 >Ваш последний результат - решено {{ refs.solved }} из
                 {{ refs.maxSolved }}</span
             >
-            <span>Общая точность {{ refs.solvedPercent }}%</span>
+            <span>Общая точность {{ solvedPercent }}%</span>
         </article>
 
         <el-form-item :label="`Длительность ${userSettings.duration} минут`">
@@ -39,9 +39,6 @@
                 <el-checkbox :label="Marks.Minus">Разность</el-checkbox>
                 <el-checkbox :label="Marks.Multiply">Умножение</el-checkbox>
                 <el-checkbox :label="Marks.Divide">Деление</el-checkbox>
-                <el-checkbox :label="Marks.Exponentiation"
-                    >Возведение в степень</el-checkbox
-                >
             </el-checkbox-group>
         </el-form-item>
 
@@ -53,9 +50,10 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { reactive, onMounted, ref } from "vue";
+import { reactive, onMounted, ref, computed } from "vue";
 import { IUserData } from "../Inteface";
 import { Marks } from "../Enums";
+
 const router = useRouter();
 
 const elemetSettings = {
@@ -67,9 +65,11 @@ const elemetSettings = {
 const refs = ref({
     day: "",
     solved: "",
-    maxSolved: "",
-    solvedPercent: ""
+    maxSolved: ""
 });
+const solvedPercent = computed(
+    () => (+refs.value.solved / +refs.value.maxSolved) * 100
+);
 
 const userSettings = reactive({
     difficult: 0,
@@ -89,14 +89,12 @@ onMounted(() => {
         refs.value.day = userData.day;
         refs.value.solved = userData.solved;
         refs.value.maxSolved = userData.maxSolved;
-        refs.value.solvedPercent = userData.solvedPercent;
     }
     if (!userData) {
         userData = {
             solved: "0",
             maxSolved: "25",
-            day: "0",
-            solvedPercent: "0"
+            day: "1"
         };
         localStorage.setItem("userData", JSON.stringify(userData));
     }

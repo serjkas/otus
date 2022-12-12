@@ -3,7 +3,6 @@ export enum Marks {
     Minus = "-",
     Multiply = "*",
     Divide = "/",
-    Exponentiation = "^"
 }
 
 export enum FocusElement {

@@ -77,23 +77,27 @@
 
             <article>
                 <el-button size="large" circle>0</el-button>
-                <el-button size="large" type="warning" circle>=</el-button>
+                <el-button
+                    size="large"
+                    type="warning"
+                    circle
+                    @click="checkRusult"
+                    >=</el-button
+                >
             </article>
         </section>
-        <p>{{ usersResult }}</p>
     </section>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref, computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
-// import { Marks, FocusElement } from "../Enums";
-import { IUserSettings } from "../Inteface";
+import { useRouter } from "vue-router";
+import { Marks } from "../Enums";
+import { IUserData, IUserSettings } from "../Inteface";
 import type { InputInstance } from "element-plus";
 import { vMaska } from "maska";
 
 const router = useRouter();
-const route = useRoute();
 
 const focusedElement = ref(1);
 
@@ -116,12 +120,32 @@ const inputValueOneRef = ref<InputInstance>();
 const inputValueTwoRef = ref<InputInstance>();
 const inputValueThreeRef = ref<InputInstance>();
 
-const usersResult = computed(
-    () => +refs.value.inputValueOne + +refs.value.inputValueOne
+const usersResultPlus = computed(
+    () =>
+        +refs.value.inputValueOne +
+        +refs.value.inputValueTwo +
+        +refs.value.inputValueThree
+);
+const usersResultMinus = computed(
+    () =>
+        +refs.value.inputValueOne -
+        +refs.value.inputValueTwo -
+        +refs.value.inputValueThree
+);
+const usersResultMultiply = computed(
+    () =>
+        +refs.value.inputValueOne *
+        +refs.value.inputValueTwo *
+        +refs.value.inputValueThree
+);
+const usersResultDivide = computed(
+    () =>
+        +refs.value.inputValueOne /
+        +refs.value.inputValueTwo /
+        +refs.value.inputValueThree
 );
 
 const enterValue = (value: number) => {
-    
     switch (focusedElement.value) {
         case 1:
             return refs.value.inputValueOne.length <= 4
@@ -141,32 +165,6 @@ const enterValue = (value: number) => {
             return "";
     }
 };
-// watch(
-//     () => refs.value.inputValueOne,
-//     (newValue, oldValue) => {
-//         console.log(newValue);
-//     },
-//     { deep: true }
-// );
-
-// switch (refs.value.mark) {
-//         case Marks.Plus:
-//             const result =
-//                 refs.value.inputValueOne +
-//                 refs.value.inputValueTwo +
-//                 refs.value.inputValueThree;
-//             console.log(result);
-
-//             return result;
-//         case Marks.Minus:
-//             return "";
-//         case Marks.Multiply:
-//             return "";
-//         case Marks.Divide:
-//             return "";
-//         case Marks.Exponentiation:
-//             return "";
-//     }
 
 const onSubmit = () => {
     console.log("submit!");
@@ -201,9 +199,52 @@ const toLeft = () => {
     }
 };
 
+const checkRusult = () => {
+    let res = false;
+    switch (refs.value.mark) {
+        case Marks.Plus:
+            res = refs.value.resultValue == usersResultPlus.value;
+
+            return saveGame();
+        case Marks.Minus:
+            res = refs.value.resultValue == usersResultMinus.value;
+            return res ? saveGame() : "";
+        case Marks.Multiply:
+            res = refs.value.resultValue == usersResultMultiply.value;
+            return res ? saveGame() : "";
+        case Marks.Divide:
+            res = refs.value.resultValue == usersResultDivide.value;
+            return res ? saveGame() : "";
+        default:
+            return;
+    }
+};
+
+const saveGame = () => {
+    const localUserData = localStorage.getItem("userData") || "";
+    let userData: IUserData = localUserData ? JSON.parse(localUserData) : "";
+    userData.solved = `${+userData.solved + 1}`;
+    localStorage.setItem("userData", JSON.stringify(userData));
+};
+
+const generateRandom = (maxLimit = 100) => {
+    let rand = Math.random() * maxLimit;
+    return Math.floor(rand);
+};
+
+const randomItem = (items: any) => {
+    return items[Math.floor(Math.random() * items.length)];
+};
+
 onMounted(() => {
     settings = JSON.parse(localStorage.getItem("userSettings") || "");
     inputValueOneRef.value?.focus();
+    refs.value.resultValue = `${generateRandom(+settings.difficult + 122)}`;
+    refs.value.mark = randomItem(settings.checkList);
+    refs.value.time = settings.duration;
+    setTimeout(() => {
+        router.push({ name: "Main" });
+    }, +settings.duration * 1000 * 60);
 });
 </script>
 
@@ -214,6 +255,9 @@ onMounted(() => {
 .game-header-buttons {
     display: flex;
     justify-content: space-between;
+}
+.game-header-buttons input {
+    text-align: center;
 }
 .game-header-buttons .el-input {
     width: 60px;
